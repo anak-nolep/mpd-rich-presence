@@ -33,35 +33,35 @@ var (
 )
 
 func init() {
-	v.SetConfigName("mpd-rich-presence")
-	v.SetConfigType("yaml")
-	v.AddConfigPath("$XDG_CONFIG_HOME")
-	v.AddConfigPath("$HOME/.config")
-	v.AddConfigPath(".")
+        v.SetConfigName("mpd-rich-presence")
+        v.SetConfigType("yml")
+        v.AddConfigPath("$HOME/.config")
+        v.AddConfigPath(".")
 
-	v.SetDefault("branding", "mpd")
-	v.SetDefault("use_socket", false)
-	v.SetDefault("host", "127.0.0.1")
-	v.SetDefault("port", 6600)
+        if err = v.ReadInConfig(); err != nil {
+                v.SetDefault("branding", "mpd")
+                v.SetDefault("use_socket", false)
+                v.SetDefault("host", "127.0.0.1")
+                v.SetDefault("port", 6600)
 
-	v.SetDefault("sleep.long", 30*time.Second)
-	v.SetDefault("sleep.short", 5*time.Second)
+                v.SetDefault("sleep.long", 30*time.Second)
+                v.SetDefault("sleep.short", 5*time.Second)
 
-	v.SetDefault("rich_presence.appid", "1037215044141854721")
-	v.SetDefault("rich_presence.image.large", "%album%")
-	v.SetDefault("rich_presence.image.small", "%title%")
-	v.SetDefault("rich_presence.upper", "%title%")
-	v.SetDefault("rich_presence.lower", "by %artist% (%album%)")
-	v.SetDefault("rich_presence.button", "View on Last.fm")
-	v.SetDefault("rich_presence.time", "elapsed")
+                v.SetDefault("rich_presence.appid", "1037215044141854721")
+                v.SetDefault("rich_presence.image.large", "%album%")
+                v.SetDefault("rich_presence.image.small", "%title%")
+                v.SetDefault("rich_presence.upper", "%title%")
+                v.SetDefault("rich_presence.lower", "by %artist% (%album%)")
+                v.SetDefault("rich_presence.button", "View on Last.fm")
+                v.SetDefault("rich_presence.time", "elapsed")
 
-	v.SetDefault("lastfm.enabled", true)
-	v.SetDefault("lastfm.apikey", apiKey)
-	v.SetDefault("lastfm.apisecret", apiSecret)
+                v.SetDefault("lastfm.enabled", true)
+                v.SetDefault("lastfm.apikey", apiKey)
+                v.SetDefault("lastfm.apisecret", apiSecret)
 
-	if err = v.ReadInConfig(); err != nil {
-		log.Warn("No config file found, using defaults.")
-	}
+                v.SafeWriteConfig()
+                log.Warn("No config file found, writing defaults config.")
+        }
 
 	if err = v.Unmarshal(&c); err != nil {
 		log.WithError(err).Fatal("failed to unmarshal config")
